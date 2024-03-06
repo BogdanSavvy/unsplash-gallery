@@ -9,22 +9,27 @@ export interface GalleryState {
   images: ImageType[];
   status: string;
   error?: string;
+  pageNumber: number;
 }
 
 const initialState: GalleryState = {
   images: [],
   status: 'idle', // 'loading', 'succeeded', 'failed',
   error: undefined,
+  pageNumber: 1,
 };
 
-export const fetchImages = createAsyncThunk('gallery/fetchPhotos', async () => {
-  try {
-    const response = await getPhotos();
-    return response.data;
-  } catch (error: any) {
-    return error.message;
-  }
-});
+export const fetchImages = createAsyncThunk(
+  'gallery/fetchPhotos',
+  async (pageNumber: number) => {
+    try {
+      const response = await getPhotos(pageNumber);
+      return response.data;
+    } catch (error: any) {
+      return error.message;
+    }
+  },
+);
 
 export const gallerySlice = createSlice({
   name: 'gallery',
@@ -60,6 +65,7 @@ export const gallerySlice = createSlice({
         };
       });
       state.images = state.images.concat(loadedImages);
+      state.pageNumber += 1;
     });
     builder.addCase(fetchImages.rejected, (state, action) => {
       state.status = 'failed';
@@ -71,6 +77,8 @@ export const gallerySlice = createSlice({
 export const selectGalleryImages = (state: RootState) => state.gallery.images;
 export const selectGalleryStatus = (state: RootState) => state.gallery.status;
 export const selectGalleryErrors = (state: RootState) => state.gallery.error;
+export const selectGalleryPageNumber = (state: RootState) =>
+  state.gallery.pageNumber;
 
 export const {} = gallerySlice.actions;
 

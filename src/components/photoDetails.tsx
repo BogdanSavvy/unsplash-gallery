@@ -1,13 +1,29 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import Loader from './loader';
 import { ImageType } from '../types';
 
 type PhotoDetailsProps = {
-  image: ImageType;
+  image: ImageType | null;
   status: string;
   error?: string;
+};
+
+const handlePress = async (url?: string) => {
+  if (url) {
+    await Linking.openURL(url);
+  } else {
+    Alert.alert(`Don't know how to open this URL: ${url}`);
+  }
 };
 
 const PhotoDetails = ({ image, status, error }: PhotoDetailsProps) => {
@@ -17,17 +33,47 @@ const PhotoDetails = ({ image, status, error }: PhotoDetailsProps) => {
 
       {error && <Text>Something went wrong! Try again later.</Text>}
 
-      {status === 'succeeded' && (
+      {image && (
         <View style={{ flex: 1, backgroundColor: image.color }}>
           <Image
             source={{
               uri: image.urls.regular,
             }}
-            style={styles.image}
+            style={styles.mainImage}
           />
-          <Text>likes: {image.likes}</Text>
-          <Text>autor: {image.user.name}</Text>
-          <Text>{image.user.portfolio_url}</Text>
+          <View style={styles.cards}>
+            <View style={[styles.card, styles.cardHalph]}>
+              <Text style={styles.cardTitle}>likes:</Text>
+              <Text style={styles.cardDescription}>{image.likes}</Text>
+            </View>
+
+            <View style={[styles.card, styles.cardHalph]}>
+              <Image
+                style={styles.userImage}
+                source={{
+                  uri: image.user.profile_image.medium,
+                }}
+              />
+            </View>
+
+            <View style={[styles.card, styles.cardHalph]}>
+              <Text style={styles.cardTitle}>Autor:</Text>
+              <Text style={styles.cardDescription}>{image.user.name}</Text>
+            </View>
+
+            {image.user.portfolio_url && (
+              <View style={styles.card}>
+                <Text style={styles.cardTitle}>Portfilio URL:</Text>
+                <TouchableOpacity
+                  onPress={() => handlePress(image.user.portfolio_url)}
+                >
+                  <Text style={styles.cardDescription}>
+                    {image.user.portfolio_url}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
         </View>
       )}
     </View>
@@ -38,10 +84,50 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  image: {
+  mainImage: {
+    flex: 1,
     width: 'auto',
-    height: 360,
+    height: 'auto',
+  },
+  userImage: {
+    width: 65,
+    height: 65,
     objectFit: 'cover',
+    borderRadius: 50,
+    alignSelf: 'center',
+  },
+  cards: {
+    padding: 5,
+    position: 'absolute',
+    bottom: 0,
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 5,
+  },
+  card: {
+    display: 'flex',
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: '100%',
+    alignSelf: 'stretch',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(250, 250, 250, 0.4)',
+    padding: 10,
+  },
+  cardHalph: {
+    flexBasis: 'auto',
+    alignSelf: 'stretch',
+  },
+  cardTitle: {
+    color: '#000',
+    marginBottom: 10,
+    fontSize: 18,
+    textTransform: 'capitalize',
+  },
+  cardDescription: {
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
 

@@ -9,6 +9,7 @@ import {
   selectGalleryErrors,
   selectGalleryImages,
   selectGalleryStatus,
+  selectGalleryPageNumber,
 } from '../redux/slices/gallerySlice';
 import { fetchPhoto } from '../redux/slices/photoSlice';
 import Gallery from './gallery';
@@ -22,10 +23,11 @@ const GalleryContainer = ({
   const images = useSelector(selectGalleryImages);
   const status = useSelector(selectGalleryStatus);
   const error = useSelector(selectGalleryErrors);
+  const pageNumber = useSelector(selectGalleryPageNumber);
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchImages());
+      dispatch(fetchImages(pageNumber));
     }
   }, [status, dispatch]);
 
@@ -34,12 +36,21 @@ const GalleryContainer = ({
     dispatch(fetchPhoto(imageId));
   };
 
+  const loadMoreImages = () => {
+    try {
+      dispatch(fetchImages(pageNumber));
+    } catch (error) {
+      console.log('ERROR - func: loadMoreImages', error);
+    }
+  };
+
   return (
     <Gallery
       images={images}
       status={status}
       error={error}
-      onPress={goToPickedPhoto}
+      goToPickedPhoto={goToPickedPhoto}
+      loadMoreImages={loadMoreImages}
     />
   );
 };
