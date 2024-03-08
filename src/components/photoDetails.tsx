@@ -22,7 +22,7 @@ const handlePress = async (url?: string) => {
   if (url) {
     await Linking.openURL(url);
   } else {
-    Alert.alert(`Don't know how to open this URL: ${url}`);
+    Alert.alert(`Can't open this URL: ${url}`);
   }
 };
 
@@ -44,7 +44,7 @@ const PhotoDetails = ({ image, status, error }: PhotoDetailsProps) => {
           <View style={styles.cards}>
             <View style={[styles.card, styles.cardHalph]}>
               <Text style={styles.cardTitle}>likes:</Text>
-              <Text style={styles.cardDescription}>{image.likes}</Text>
+              <Text style={styles.cardDescription}>🤍 {image.likes}</Text>
             </View>
 
             <View style={[styles.card, styles.cardHalph]}>

@@ -36,9 +36,19 @@ const Gallery = ({
                 source={{
                   uri: image.urls.small,
                 }}
-                width={110}
-                height={120}
+                style={styles.image}
               />
+              <Text style={[styles.imageDetails, { top: 0, left: 0 }]}>
+                {image.user.name}
+              </Text>
+              <Text
+                style={[
+                  styles.imageDetails,
+                  { bottom: 0, right: 0, textAlign: 'right' },
+                ]}
+              >
+                🤍 {image.likes}
+              </Text>
             </View>
           </TouchableOpacity>
         );
@@ -64,6 +74,18 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: 5,
+  },
+  image: {
+    minWidth: 110,
+    maxWidth: 150,
+    height: 120
+  },
+  imageDetails: {
+    width: '100%',
+    position: 'absolute',
+    color: '#000',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    padding: 5,
   },
   loading: {
     fontSize: 32,

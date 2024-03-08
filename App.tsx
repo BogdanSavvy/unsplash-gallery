@@ -15,7 +15,11 @@ function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Welcome">
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen
+            name="Welcome"
+            component={WelcomeScreen}
+            options={{ header: () => <></> }}
+          />
           <Stack.Screen name="Gallery" component={GalleryScreen} />
           <Stack.Screen name="Photo" component={PhotoScreen} />
         </Stack.Navigator>

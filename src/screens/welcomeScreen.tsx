@@ -25,7 +25,7 @@ const WelcomeScreen = ({ navigation }: ScreenProps) => {
             <Text style={styles.text_secondary}>by BSVN-DEV</Text>
           </View>
           <MainButton
-            title="Explore"
+            title="Explore 💫"
             onPress={goToGallery}
             style={styles.button}
           />
